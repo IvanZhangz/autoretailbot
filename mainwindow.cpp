@@ -18,13 +18,16 @@ MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    // setupUi 会根据 mainwindow.ui 创建控件并绑定到 ui 指针。
     ui->setupUi(this);
 
+    // MainWindow 不创建后端对象，只取 Controller 单例并连接信号。
     RobotController& controller = RobotController::instance();
     connect(&controller, &RobotController::logMessage, this, &MainWindow::appendLog);
     connect(&controller, &RobotController::stateChanged, this, &MainWindow::onControllerStateChanged);
     connect(ui->sendDebugOrderButton, &QPushButton::clicked, this, &MainWindow::onSendDebugOrderClicked);
 
+    // 初始化 Controller；失败时禁用调试按钮，避免继续发送订单。
     QString error;
     if (!controller.init(resolveConfigDir(), &error))
     {
@@ -33,6 +36,7 @@ MainWindow::MainWindow(QWidget* parent)
         return;
     }
 
+    // 商品下拉框的数据来自 product_catalog.json 解析后的配置。
     ui->productComboBox->addItems(controller.productIds());
     appendLog("[INFO] 前端初始化完成，可发送调试订单");
 }
@@ -61,6 +65,7 @@ void MainWindow::onControllerStateChanged(const QString& state)
         statusBar()->showMessage(state);
 }
 
+// 运行时优先使用外部 config，方便部署改配置；都找不到时回退到 Qt 资源。
 QString MainWindow::resolveConfigDir() const
 {
     const QString appConfigDir = QCoreApplication::applicationDirPath() + "/config";

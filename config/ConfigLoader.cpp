@@ -8,6 +8,7 @@
 
 namespace
 {
+// 工具函数：打开一个 JSON 文件并要求根节点必须是对象。
 QJsonObject readObject(const QString& path, QString* errorMessage)
 {
     QFile file(path);
@@ -25,6 +26,7 @@ QJsonObject readObject(const QString& path, QString* errorMessage)
     return doc.object();
 }
 
+// 工具函数：把 JSON 中的 x/y/z/roll/pitch/yaw 转成 Pose。
 Pose parsePose(const QJsonObject& object)
 {
     Pose pose;
@@ -37,6 +39,7 @@ Pose parsePose(const QJsonObject& object)
     return pose;
 }
 
+// 工具函数：解析 AGV 站点；兼容 pose 和 chassis_pose 两种字段名。
 ColumnStation parseStation(const QJsonObject& object)
 {
     ColumnStation station;
@@ -49,6 +52,7 @@ ColumnStation parseStation(const QJsonObject& object)
 
 bool ConfigLoader::load(const QString& configDir, RobotConfig& config, QString* errorMessage) const
 {
+    // 先加载到临时对象 loaded，避免中途失败时污染外部 config。
     RobotConfig loaded;
     if (!loadStore(configDir + "/store.json", loaded.store, errorMessage)) return false;
     if (!loadFactories(configDir + "/factories.json", loaded.factories, errorMessage)) return false;
@@ -111,15 +115,18 @@ bool ConfigLoader::loadShelfLayout(const QString& path, ShelfLayoutConfig& layou
     layout.shelfId = root.value("shelf_id").toString();
     layout.rows = root.value("rows").toInt();
     layout.cols = root.value("cols").toInt();
+    // row_heights 是 JSON 对象，key 是行号字符串，value 是该行升降高度。
     const QJsonObject heights = root.value("row_heights").toObject();
     for (auto it = heights.begin(); it != heights.end(); ++it)
         layout.rowHeights[it.key().toInt()] = it.value().toDouble();
+    // column_stations 保存每列的标准停车点。
     for (const QJsonValue& value : root.value("column_stations").toArray())
     {
         const ColumnStation station = parseStation(value.toObject());
         if (station.col > 0 && !station.stationId.isEmpty())
             layout.columnStations[station.col] = station;
     }
+    // slots 保存每个具体货位的行列、观察配置和预抓取姿态。
     for (const QJsonValue& value : root.value("slots").toArray())
     {
         const QJsonObject object = value.toObject();
@@ -130,6 +137,7 @@ bool ConfigLoader::loadShelfLayout(const QString& path, ShelfLayoutConfig& layou
         slot.observeProfile = object.value("observe_profile").toString();
         slot.rightPrePickPose = parsePose(object.value("right_pre_pick_pose").toObject());
         slot.dualPrePickPose = parsePose(object.value("dual_pre_pick_pose").toObject());
+        // dedicated_station 是可选字段；有它时该货位使用专用停车点。
         if (object.contains("dedicated_station"))
         {
             slot.hasDedicatedStation = true;
@@ -150,6 +158,7 @@ bool ConfigLoader::loadProducts(const QString& path, QMap<QString, ProductConfig
 {
     const QJsonObject root = readObject(path, errorMessage);
     if (root.isEmpty()) return false;
+    // 商品用 product_id 做 key，便于订单快速查找。
     for (const QJsonValue& value : root.value("products").toArray())
     {
         const QJsonObject object = value.toObject();
@@ -171,6 +180,7 @@ bool ConfigLoader::loadInventory(const QString& path, QList<InventoryItem>& inve
 {
     const QJsonObject root = readObject(path, errorMessage);
     if (root.isEmpty()) return false;
+    // 库存 item 把 product_id 绑定到 slot_id，Controller 会从这里找可用货位。
     for (const QJsonValue& value : root.value("items").toArray())
     {
         const QJsonObject object = value.toObject();
@@ -190,6 +200,7 @@ bool ConfigLoader::loadHome(const QString& path, HomeConfig& home, QString* erro
     if (root.isEmpty()) return false;
     home.sellingHome = parseStation(root.value("selling_home").toObject());
     home.counterPlacePose = parsePose(root.value("counter_place_pose").toObject());
+    // idle_posture 描述任务结束后的空闲姿态。
     const QJsonObject idle = root.value("idle_posture").toObject();
     home.leftArmHome = idle.value("left_arm_home").toString(home.leftArmHome);
     home.rightArmHome = idle.value("right_arm_home").toString(home.rightArmHome);

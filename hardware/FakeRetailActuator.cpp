@@ -57,6 +57,7 @@ void FakeRetailActuator::loopDev()
     m_rightGripper->loop();
 }
 
+// Fake 动作状态机：Begin 记录开始时间，Running 等待耗时结束，然后 Finished。
 void FakeRetailActuator::loopAction(RobotAction& action)
 {
     if (action.sta == RobotAction::ActFinished || action.sta == RobotAction::ActFailure)
@@ -101,6 +102,7 @@ QVariantMap FakeRetailActuator::poseToMap(const Pose& pose) const
     return {{"x", pose.x}, {"y", pose.y}, {"z", pose.z}, {"roll", pose.roll}, {"pitch", pose.pitch}, {"yaw", pose.yaw}};
 }
 
+// 根据动作类型做完成后的副作用；大多数动作只需要标记完成。
 void FakeRetailActuator::finishAction(RobotAction& action)
 {
     switch (action.type)
@@ -109,6 +111,7 @@ void FakeRetailActuator::finishAction(RobotAction& action)
     {
         const int row = action.args.value("row").toInt();
         const int col = action.args.value("col").toInt();
+        // Fake 视觉：根据货架行高和列号生成一个固定的识别位姿。
         Pose detected;
         detected.x = 0.35;
         detected.y = 0.02 * col;

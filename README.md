@@ -20,6 +20,10 @@
 - `model/`：跨模块共享数据结构。
 - `mainwindow.*`：Qt调试前端。
 
+## 代码讲解
+
+如果你想按启动顺序阅读代码，请从 `main.cpp` 开始，并参考 [`docs/code_walkthrough_zh.md`](docs/code_walkthrough_zh.md)。该文档按“入口函数 -> 前端窗口 -> Controller 主循环 -> 任务状态机 -> 配置/硬件/服务”的顺序逐步解释。
+
 ## 构建
 
 ```bash
