@@ -1,0 +1,6 @@
+{
+  "_comment": "工厂选择配置：用于决定创建哪套硬件/服务实现；当前实现 fake，后续可扩展 realman、ros2 等。",
+  "actuator_factory": "fake",
+  "tablet_factory": "fake",
+  "voice_factory": "fake"
+}

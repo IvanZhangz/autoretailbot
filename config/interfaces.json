@@ -1,0 +1,7 @@
+{
+  "_comment": "外部接口配置：真实部署时平板/语音/视觉服务在各自文件中启动并监听这些端点或主题。",
+  "tablet_endpoint": "tcp://0.0.0.0:18080",
+  "voice_endpoint": "tcp://0.0.0.0:18081",
+  "vision_request_topic": "/retail_robot/vision/request",
+  "vision_result_topic": "/retail_robot/vision/result"
+}

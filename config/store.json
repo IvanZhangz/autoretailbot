@@ -1,0 +1,7 @@
+{
+  "_comment": "门店级配置：同一套程序部署到不同门店时，只需要替换本文件和其它配置文件。",
+  "store_id": "demo_store",
+  "robot_profile": "dual_arm_mobile_v1",
+  "map_frame": "map",
+  "shelf_frame": "main_shelf_frame"
+}
