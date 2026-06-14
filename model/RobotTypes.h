@@ -82,7 +82,7 @@ struct HomeConfig
     bool rightGripperOpen = true;   // 右夹爪空闲时是否打开。
 };
 
-// 任务策略：部署时配置，不在代码里写死。
+// 任务策略：部署时配置
 struct TaskPolicyConfig
 {
     int maxVisionAttempts = 1; // 视觉最大尝试次数，MVP 默认 1。

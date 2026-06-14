@@ -1,5 +1,4 @@
 // 文件说明：定义任务 Mission、节拍 Beat、动作 Action。
-// 设计遵循 R_DAR_INIT：一个任务包含多个 beat，beat 顺序执行；同一 beat 内多个 action 同时开始，全部完成后 beat 才结束。
 #pragma once
 
 #include <QList>
@@ -33,7 +32,7 @@ struct RobotAction
         VisionDetectByProduct
     };
 
-    // 动作状态：参考 R_DAR_INIT 的 Begin/Wait/Initialized/Running/Failure/Finished 状态机形式。
+    // 动作状态：Begin/Wait/Initialized/Running/Failure/Finished
     enum ActionSta
     {
         ActBegin = 0,

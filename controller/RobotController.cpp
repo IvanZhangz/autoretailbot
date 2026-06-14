@@ -1,10 +1,9 @@
-// 文件说明：实现机器人控制器单例和主轮询状态机。
+// 文件说明：实现机器人控制器单例和主轮询状态机
 #include "RobotController.h"
 
 #include <QDateTime>
 #include <QTimerEvent>
 
-// 使用函数内 static，C++ 会保证线程安全初始化，避免全局对象初始化顺序问题。
 RobotController& RobotController::instance()
 {
     static RobotController controller;
@@ -17,7 +16,7 @@ RobotController::RobotController(QObject* parent)
     m_mission.clear();
 }
 
-// 初始化顺序很重要：先读配置，再按配置创建硬件和服务，最后启动定时器。
+// 初始化顺序：先读配置，再按配置创建硬件和服务，最后启动定时器
 bool RobotController::init(const QString& configDir, QString* errorMessage)
 {
     emit logMessage("Controller 初始化，配置目录: " + configDir);
@@ -29,7 +28,7 @@ bool RobotController::init(const QString& configDir, QString* errorMessage)
         return false;
     }
 
-    // 2) 通过工厂创建动作执行器；当前是 Fake，未来可切换真实硬件。
+    // 2) 通过工厂创建动作执行器；当前是Fake，后续切换真实硬件
     m_actuator = ActuatorFactory::create(m_config.factories);
     connect(m_actuator.get(), &ActionActuator::logMessage, this, &RobotController::logMessage);
     if (!m_actuator->init(m_config))
@@ -39,7 +38,7 @@ bool RobotController::init(const QString& configDir, QString* errorMessage)
         return false;
     }
 
-    // 3) 创建平板/语音服务，并把它们的日志信号转发给 Controller。
+    // 3) 创建平板/语音服务，并把日志信号转发给Controller
     m_tabletService = std::make_unique<TabletService>();
     m_voiceService = std::make_unique<VoiceService>();
     connect(m_tabletService.get(), &TabletService::logMessage, this, &RobotController::logMessage);
@@ -47,7 +46,7 @@ bool RobotController::init(const QString& configDir, QString* errorMessage)
     m_tabletService->start(m_config.interfaces);
     m_voiceService->start(m_config.interfaces);
 
-    // 4) 启动后先执行一次回 home 任务，确保机器人从安全姿态开始接单。
+    // 4) 启动后先执行一次回home任务，确保机器人从安全姿态开始接单
     RobotMission homeMission;
     appendHomeBeat(homeMission);
     homeMission.orderId = "startup_home";
@@ -56,7 +55,7 @@ bool RobotController::init(const QString& configDir, QString* errorMessage)
     m_mission = homeMission;
     m_currStep = 0;
 
-    // 5) 启动 Qt 定时器；后续 timerEvent 会周期调用 loop()。
+    // 5) 启动Qt定时器周期调用loop()
     if (m_timerId == 0)
         m_timerId = startTimer(m_config.taskPolicy.loopIntervalMs);
     m_initialized = true;
@@ -85,7 +84,7 @@ void RobotController::timerEvent(QTimerEvent* event)
     loop();
 }
 
-// 主循环保持短小，便于理解每一轮先做什么、后做什么。
+// 轮询入口
 void RobotController::loop()
 {
     loopDevices();
@@ -95,19 +94,21 @@ void RobotController::loop()
     loop_workSM();
 }
 
+// 轮询硬件设备
 void RobotController::loopDevices()
 {
     if (m_actuator)
         m_actuator->loopDev();
 }
 
+// 轮询平板和语音
 void RobotController::loopServices()
 {
     if (m_tabletService) m_tabletService->loop();
     if (m_voiceService) m_voiceService->loop();
 }
 
-// 外部服务各自维护输入队列；这里统一搬运到 Controller 订单队列。
+// 外部服务各自维护输入队列；这里统一至Controller订单队列
 void RobotController::acceptPendingOrders()
 {
     while (m_tabletService && m_tabletService->hasOrder())
@@ -116,7 +117,7 @@ void RobotController::acceptPendingOrders()
         m_orderQueue.enqueue(m_voiceService->takeOrder());
 }
 
-// 只有当前任务已经结束并且队列非空，才会取出一个订单开始执行。
+// 只有当前任务已经结束并且队列非空，才会取出一个订单开始执行
 void RobotController::startNextMissionIfIdle()
 {
     if (!m_initialized || !m_mission.isFinished || !m_mission.isEnd || m_orderQueue.isEmpty())
@@ -137,7 +138,7 @@ void RobotController::startNextMissionIfIdle()
     setState("执行订单 " + order.orderId);
 }
 
-// 工作状态机：beat 顺序执行，beat 内 action 并行推进。
+// 工作状态机
 void RobotController::loop_workSM()
 {
     if (m_mission.isFinished || m_mission.isEnd || !m_actuator)
@@ -145,12 +146,12 @@ void RobotController::loop_workSM()
 
     if (m_currStep < m_mission.beats.size())
     {
-        // 当前 beat 中所有 action 都完成后，m_currStep 才会加一进入下一个 beat。
+        // 当前 beat 中所有 action 都完成后，m_currStep 才会加一进入下一个 beat
         RobotBeat& beat = m_mission.beats[m_currStep];
         bool stepFinished = true;
         for (RobotAction& action : beat.actions)
         {
-            // mission.args 是同一任务内动作共享的数据区，例如视觉动作写入 detected_pose。
+            // mission.args 是同一任务内动作共享的数据区
             action.bindMissionArgs(&m_mission.args);
             m_actuator->loopAction(action);
             if (action.sta == RobotAction::ActFailure)
@@ -190,7 +191,7 @@ QVariantMap RobotController::stationArgs(const ColumnStation& station) const
     return {{"station_id", station.stationId}, {"x", station.pose.x}, {"y", station.pose.y}, {"z", station.pose.z}, {"yaw", station.pose.yaw}};
 }
 
-// 订单转任务：校验商品 -> 查库存货位 -> 选择站点/抓取方式 -> 生成节拍。
+// 订单转任务：校验商品 -> 查库存货位 -> 选择站点/抓取方式 -> 生成节拍
 bool RobotController::buildMissionFromOrder(const Order& order, RobotMission& mission, QString* errorMessage)
 {
     if (order.items.isEmpty())
@@ -225,7 +226,7 @@ bool RobotController::buildMissionFromOrder(const Order& order, RobotMission& mi
     const ProductConfig product = m_config.products.value(productId);
     const ShelfSlot slot = m_config.shelfLayout.shelfSlots.value(inventory.slotId);
     const ColumnStation station = stationForSlot(slot);
-    // boxed 包装默认使用双臂；naked 等非盒装商品默认右臂单手抓取。
+    // boxed 包装默认使用双臂；非盒装商品默认右臂单手抓取
     const bool dualArm = product.packageType == "boxed";
 
     mission.clear();
@@ -235,7 +236,7 @@ bool RobotController::buildMissionFromOrder(const Order& order, RobotMission& mi
     mission.args["product_id"] = productId;
     mission.args["slot_id"] = slot.slotId;
 
-    // Beat 1：移动到货架列/货位，并把身体、头部和手臂移动到预抓取姿态。
+    // Beat 1：移动到货架列/货位，并把身体、头部和手臂移动到预抓取姿态
     RobotBeat prepare;
     prepare.name = "到达货架并准备观察/抓取";
     prepare.actions.append({RobotAction::AgvMoveToStation, "AGV到站点", stationArgs(station)});
@@ -247,37 +248,37 @@ bool RobotController::buildMissionFromOrder(const Order& order, RobotMission& mi
                             poseArgs(dualArm ? slot.dualPrePickPose : slot.rightPrePickPose)});
     mission.beats.append(prepare);
 
-    // Beat 2：视觉识别目标，Fake 执行器会把 detected_pose 写入 mission.args。
+    // Beat 2：视觉识别目标，Fake 执行器会把 detected_pose 写入 mission.args
     RobotBeat vision;
     vision.name = "视觉识别";
     vision.actions.append({RobotAction::VisionDetectByProduct, "识别目标商品", {{"product_id", productId}, {"row", slot.row}, {"col", slot.col}}});
     mission.beats.append(vision);
 
-    // Beat 3：打开夹爪，为抓取做准备。
+    // Beat 3：打开夹爪，为抓取做准备
     RobotBeat open;
     open.name = "打开夹爪";
     open.actions.append({dualArm ? RobotAction::BothGrippersOpen : RobotAction::RightGripperOpen, dualArm ? "左右夹爪打开" : "右夹爪打开"});
     mission.beats.append(open);
 
-    // Beat 4：移动到视觉识别出的抓取位。
+    // Beat 4：移动到视觉识别出的抓取位
     RobotBeat movePick;
     movePick.name = "移动到视觉抓取位";
     movePick.actions.append({dualArm ? RobotAction::DualArmMoveL : RobotAction::RightArmMoveL, dualArm ? "双臂到抓取位" : "右臂到抓取位", {{"pose_key", "detected_pose"}}});
     mission.beats.append(movePick);
 
-    // Beat 5：闭合夹爪夹住商品。
+    // Beat 5：闭合夹爪夹住商品
     RobotBeat close;
     close.name = "闭合夹爪";
     close.actions.append({dualArm ? RobotAction::BothGrippersClose : RobotAction::RightGripperClose, dualArm ? "左右夹爪闭合" : "右夹爪闭合"});
     mission.beats.append(close);
 
-    // Beat 6：把商品收回到携物安全姿态。
+    // Beat 6：把商品收回到携物安全姿态
     RobotBeat carry;
     carry.name = "进入携物姿态";
     carry.actions.append({dualArm ? RobotAction::DualArmMoveCarry : RobotAction::RightArmMoveJNamed, dualArm ? "双臂携物" : "右臂携物", {{"pose_name", "right_carry"}}});
     mission.beats.append(carry);
 
-    // Beat 7：AGV 回到售卖/交付点，并调整身体准备放置。
+    // Beat 7：AGV 回到售卖/交付点，并调整身体准备放置
     RobotBeat back;
     back.name = "返回售卖点并准备交付";
     back.actions.append({RobotAction::AgvMoveToStation, "AGV返回售卖点", stationArgs(m_config.home.sellingHome)});
@@ -286,13 +287,13 @@ bool RobotController::buildMissionFromOrder(const Order& order, RobotMission& mi
     back.actions.append({RobotAction::NeckMoveTo, "头部回交付观察", {{"yaw", 0.0}, {"pitch", 0.0}}});
     mission.beats.append(back);
 
-    // Beat 8：移动到柜台放置位。
+    // Beat 8：移动到柜台放置位
     RobotBeat place;
     place.name = "柜台放置";
     place.actions.append({dualArm ? RobotAction::DualArmMovePlace : RobotAction::RightArmMoveL, dualArm ? "双臂到放置位" : "右臂到放置位", poseArgs(m_config.home.counterPlacePose)});
     mission.beats.append(place);
 
-    // Beat 9：打开夹爪释放商品。
+    // Beat 9：打开夹爪释放商品
     RobotBeat release;
     release.name = "释放商品";
     release.actions.append({dualArm ? RobotAction::BothGrippersOpen : RobotAction::RightGripperOpen, dualArm ? "左右夹爪释放" : "右夹爪释放"});
@@ -302,7 +303,7 @@ bool RobotController::buildMissionFromOrder(const Order& order, RobotMission& mi
     return true;
 }
 
-// 归位节拍会同时让底盘、左右臂、腰、颈、升降和夹爪回到配置中的 home。
+// 归位节拍会同时让底盘、左右臂、腰、颈、升降和夹爪回到配置中的 home
 void RobotController::appendHomeBeat(RobotMission& mission)
 {
     RobotBeat home;
@@ -318,7 +319,7 @@ void RobotController::appendHomeBeat(RobotMission& mission)
     mission.beats.append(home);
 }
 
-// 任务结束后统一上报结果，并把状态切回“空闲”或“错误”。
+// 任务结束后统一上报结果，并把状态切回“空闲”或“错误”
 void RobotController::finishMission(bool success, const QString& message)
 {
     m_mission.isFinished = true;

@@ -35,7 +35,7 @@ public:
     virtual QString statusText() const = 0;
 };
 
-// 动作执行器抽象：对应 R_DAR_INIT 中 ActionActuator。
+// 动作执行器抽象
 class ActionActuator : public QObject
 {
     Q_OBJECT
