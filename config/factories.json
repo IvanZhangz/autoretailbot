@@ -1,0 +1,7 @@
+{
+  "_comment": "工厂选择配置：actuator fake/real；tablet fake/grpc；voice fake/ros2；vision fake/ros2。当前默认 fake，便于无 ROS2/gRPC 环境编译运行。",
+  "actuator_factory": "fake",
+  "tablet_factory": "fake",
+  "voice_factory": "fake",
+  "vision_factory": "fake"
+}

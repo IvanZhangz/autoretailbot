@@ -1,0 +1,11 @@
+{
+  "_comment": "外部接口配置：平板走 gRPC；语音和视觉走 ROS2。当前 fake 模式只读取字段并打印日志，不真正链接 ROS2/gRPC。",
+  "ros_node_name": "autoretailbot_controller",
+  "tablet_grpc_listen": "0.0.0.0:18080",
+  "voice_order_topic": "/retail_robot/voice/order",
+  "voice_state_topic": "/retail_robot/voice/robot_state",
+  "voice_task_result_topic": "/retail_robot/voice/task_result",
+  "vision_request_topic": "/retail_robot/vision/request",
+  "vision_result_topic": "/retail_robot/vision/result",
+  "vision_timeout_ms": 3000
+}

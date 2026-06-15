@@ -1,0 +1,72 @@
+{
+  "_comment": "货架布局配置：每列一个列标准停车点；如果某个货位需要专用点，则在该货位 dedicated_station 中配置，执行期不临时选择。",
+  "shelf_id": "main_shelf",
+  "rows": 4,
+  "cols": 4,
+  "row_heights": {
+    "_comment": "行号到升降高度的映射，单位由硬件适配层解释。",
+    "1": 0.25,
+    "2": 0.55,
+    "3": 0.85,
+    "4": 1.15
+  },
+  "column_stations": [
+    {
+      "_comment": "第1列标准AGV停车点。",
+      "col": 1,
+      "station_id": "pick_col_01",
+      "pose": { "x": 1.0, "y": 0.0, "z": 0.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 }
+    },
+    {
+      "_comment": "第2列标准AGV停车点。",
+      "col": 2,
+      "station_id": "pick_col_02",
+      "pose": { "x": 1.0, "y": 0.4, "z": 0.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 }
+    },
+    {
+      "_comment": "第3列标准AGV停车点。",
+      "col": 3,
+      "station_id": "pick_col_03",
+      "pose": { "x": 1.0, "y": 0.8, "z": 0.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 }
+    },
+    {
+      "_comment": "第4列标准AGV停车点。",
+      "col": 4,
+      "station_id": "pick_col_04",
+      "pose": { "x": 1.0, "y": 1.2, "z": 0.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 }
+    }
+  ],
+  "slots": [
+    {
+      "_comment": "R1C1 无专用停车点，执行时使用第1列标准点。",
+      "slot_id": "R1C1",
+      "row": 1,
+      "col": 1,
+      "observe_profile": "row_1",
+      "right_pre_pick_pose": { "x": 0.35, "y": 0.0, "z": 0.25, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 },
+      "dual_pre_pick_pose": { "x": 0.32, "y": 0.0, "z": 0.25, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 }
+    },
+    {
+      "_comment": "R1C2 无专用停车点，执行时使用第2列标准点。",
+      "slot_id": "R1C2",
+      "row": 1,
+      "col": 2,
+      "observe_profile": "row_1",
+      "right_pre_pick_pose": { "x": 0.35, "y": 0.4, "z": 0.25, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 },
+      "dual_pre_pick_pose": { "x": 0.32, "y": 0.4, "z": 0.25, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 }
+    },
+    {
+      "_comment": "R2C1 配置了货位专用停车点，执行时优先使用 dedicated_station。",
+      "slot_id": "R2C1",
+      "row": 2,
+      "col": 1,
+      "observe_profile": "row_2",
+      "right_pre_pick_pose": { "x": 0.35, "y": 0.0, "z": 0.55, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 },
+      "dual_pre_pick_pose": { "x": 0.32, "y": 0.0, "z": 0.55, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 },
+      "dedicated_station": {
+        "station_id": "pick_R2C1_verified",
+        "pose": { "x": 1.02, "y": 0.0, "z": 0.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 }
+      }
+    }
+  ]
+}

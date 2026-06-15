@@ -1,0 +1,20 @@
+# Qt / QMake build outputs
+build-*/
+*.pro.user
+*.qmake.stash
+Makefile
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+*.o
+*.obj
+*.so
+*.dll
+*.exe
+
+# IDE files
+.vscode/
+.idea/
+
+# Runtime logs
+*.log

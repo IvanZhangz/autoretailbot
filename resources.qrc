@@ -1,0 +1,13 @@
+<!-- 文件说明：Qt资源配置文件。找不到外部 config 目录时，程序会从 :/config 读取这些默认配置。 -->
+<RCC>
+    <qresource prefix="/config">
+        <file alias="store.json">config/store.json</file>
+        <file alias="factories.json">config/factories.json</file>
+        <file alias="interfaces.json">config/interfaces.json</file>
+        <file alias="task_policy.json">config/task_policy.json</file>
+        <file alias="shelf_layout.json">config/shelf_layout.json</file>
+        <file alias="product_catalog.json">config/product_catalog.json</file>
+        <file alias="inventory.json">config/inventory.json</file>
+        <file alias="home.json">config/home.json</file>
+    </qresource>
+</RCC>

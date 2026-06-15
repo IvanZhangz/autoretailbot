@@ -1,0 +1,6 @@
+{
+  "_comment": "任务策略配置：MVP 默认视觉和抓取最多尝试 1 次，主循环 20ms 轮询一次。",
+  "max_vision_attempts": 1,
+  "max_pick_attempts": 1,
+  "loop_interval_ms": 20
+}

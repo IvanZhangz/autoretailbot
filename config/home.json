@@ -1,0 +1,23 @@
+{
+  "_comment": "Home配置：启动和每个任务结束后都会生成回home beat。",
+  "selling_home": {
+    "_comment": "机器人等待订单的售卖点。",
+    "station_id": "selling_home",
+    "pose": { "x": 0.0, "y": 0.0, "z": 0.0, "roll": 0.0, "pitch": 0.0, "yaw": 0.0 }
+  },
+  "counter_place_pose": {
+    "_comment": "柜台交付放置位。",
+    "x": 0.2, "y": -0.25, "z": 0.35, "roll": 0.0, "pitch": 0.0, "yaw": 0.0
+  },
+  "idle_posture": {
+    "_comment": "机器人空闲姿态。",
+    "left_arm_home": "home",
+    "right_arm_home": "home",
+    "waist_home_yaw": 0.0,
+    "neck_home_yaw": 0.0,
+    "neck_home_pitch": 0.0,
+    "lift_home_height": 0.0,
+    "left_gripper_open": true,
+    "right_gripper_open": true
+  }
+}

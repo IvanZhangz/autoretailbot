@@ -1,0 +1,8 @@
+{
+  "_comment": "商品目录配置：package_type 决定任务生成时使用右手抓取还是双臂抓取。",
+  "products": [
+    { "_comment": "裸杯，右手抓取。", "product_id": "red_cup_naked", "display_name": "红色裸杯", "package_type": "naked" },
+    { "_comment": "裸杯，右手抓取。", "product_id": "blue_cup_naked", "display_name": "蓝色裸杯", "package_type": "naked" },
+    { "_comment": "盒装杯，双臂抓取。", "product_id": "red_cup_boxed", "display_name": "盒装红杯", "package_type": "boxed" }
+  ]
+}

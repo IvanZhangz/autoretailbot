@@ -1,0 +1,8 @@
+{
+  "_comment": "库存配置：Controller 根据商品ID按顺序选择第一个 enabled 且 quantity>0 的货位。",
+  "items": [
+    { "slot_id": "R1C1", "product_id": "red_cup_naked", "quantity": 1, "enabled": true },
+    { "slot_id": "R1C2", "product_id": "blue_cup_naked", "quantity": 1, "enabled": true },
+    { "slot_id": "R2C1", "product_id": "red_cup_boxed", "quantity": 1, "enabled": true }
+  ]
+}
