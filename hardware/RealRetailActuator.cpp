@@ -76,62 +76,62 @@ void RealRetailActuator::loop_actSM_AgvMoveToStation(RobotAction& action)
 {
     // TODO：参考loop_actSM_VisionDetectByProduct和swit2Sta_actSM_VisionTargetIdentyById，后续各个动作同理。
     // 每一个loop_actSM_xxx，需对应一个swit2Sta_actSM_xxx
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_LiftMoveToHeight(RobotAction& action)
 {
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_WaistRotateTo(RobotAction& action)
 {
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_NeckMoveTo(RobotAction& action)
 {
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_LeftArmMoveNamed(RobotAction& action)
 {
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_RightArmMoveNamed(RobotAction& action)
 {
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_RightArmMoveL(RobotAction& action)
 {
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_RightArmMoveJNamed(RobotAction& action)
 {
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_DualArmMoveL(RobotAction& action)
 {
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_DualArmMoveCarry(RobotAction& action)
 {
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_DualArmMovePlace(RobotAction& action)
 {
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_Gripper(RobotAction& action)
 {
-    Q_UNUSED(a_action)
+    Q_UNUSED(action)
 }
 
 void RealRetailActuator::loop_actSM_VisionDetectByProduct(RobotAction& action)
@@ -197,24 +197,24 @@ void RealRetailActuator::swit2Sta_actSM_VisionTargetIdentyById(RobotAction& acti
                         .arg(nextSta)
                         .arg(reason));
                         
-    if(a_action.sta==a_destSta)
+    if(action.m_sta==nextSta)
     {
         return;
     }
     //Exit动作
-    switch(a_action.sta)
+    switch(action.m_sta)
     {
     case RobotAction::ActBegin:
         break;
     case RobotAction::ActWait:
         break;
-    case RobotAction::ActInitalized:
+    case RobotAction::ActInitialized:
         break;
     case RobotAction::ActHalt:
         break;
     case RobotAction::ActRunning:
         break;
-    case RobotAction::ActFailue:
+    case RobotAction::ActFailure:
         break;
     case RobotAction::ActFinished:
         break;
@@ -224,19 +224,19 @@ void RealRetailActuator::swit2Sta_actSM_VisionTargetIdentyById(RobotAction& acti
         break;
     }
     //Entry动作
-    switch(a_destSta)
+    switch(nextSta)
     {
     case RobotAction::ActBegin:
         break;
     case RobotAction::ActWait:
         break;
-    case RobotAction::ActInitalized:
+    case RobotAction::ActInitialized:
         break;
     case RobotAction::ActHalt:
         break;
     case RobotAction::ActRunning:
         break;
-    case RobotAction::ActFailue:
+    case RobotAction::ActFailure:
         break;
     case RobotAction::ActFinished:
         break;
@@ -246,7 +246,7 @@ void RealRetailActuator::swit2Sta_actSM_VisionTargetIdentyById(RobotAction& acti
         break;
     }
     //更新状态
-    a_action.sta=a_destSta;
+    action.m_sta=nextSta;
 }
 
 QVariantMap RealRetailActuator::PoseToMap(const Pose& pose) const
