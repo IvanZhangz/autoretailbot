@@ -6,7 +6,6 @@
 
 #include <QString>
 
-
 namespace asd_retail
 {
 class ConfigLoader
@@ -32,6 +31,8 @@ private:
     bool LoadInventory(const QString& path, QList<InventoryItem>& inventory, QString* error_message) const;
     // 读取售卖点、柜台放置位和空闲姿态。
     bool LoadHome(const QString& path, HomeConfig& home, QString* error_message) const;
+    // 读取真实硬件配置。
+    bool LoadHardware(const QString& path, HardwareConfig& hardware, QString* error_message) const;
 };
 
 } // namespace asd_retail

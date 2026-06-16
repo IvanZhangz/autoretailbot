@@ -3,6 +3,7 @@
     <qresource prefix="/config">
         <file alias="store.json">config/store.json</file>
         <file alias="factories.json">config/factories.json</file>
+        <file alias="hardware.json">config/hardware.json</file>
         <file alias="interfaces.json">config/interfaces.json</file>
         <file alias="task_policy.json">config/task_policy.json</file>
         <file alias="shelf_layout.json">config/shelf_layout.json</file>

@@ -5,6 +5,10 @@
 #include "hardware/HardwareInterfaces.h"
 #include "interfaces/VisionService.h"
 
+#include "hardware/arm/IArmDevice.h"
+#include "hardware/chassis/IChassisDevice.h"
+#include "hardware/simple/ISimpleDevice.h"
+
 #include <QElapsedTimer>
 
 
@@ -15,6 +19,7 @@ class RealRetailActuator : public ActionActuator
     Q_OBJECT
 public:
     explicit RealRetailActuator(QObject* parent = nullptr);
+    ~RealRetailActuator() override;
 
     // TODO: 初始化真实底盘、机械臂、升降、腰、头、夹爪等 SDK/通讯对象。
     bool Init(const RobotConfig& config) override;
@@ -56,6 +61,17 @@ private:
     QElapsedTimer m_clock;                // 用于 TODO 超时/请求 ID 生成。
     bool m_error = false;                 // 真实执行器错误标记。
     QString m_error_text;                  // 真实执行器错误说明。
+
+    std::unique_ptr<IArmDevice> m_left_arm;
+    std::unique_ptr<IArmDevice> m_right_arm;
+
+    std::unique_ptr<IChassisDevice> m_chassis;
+
+    std::unique_ptr<ISimpleDevice> m_lift;
+    std::unique_ptr<ISimpleDevice> m_waist;
+    std::unique_ptr<ISimpleDevice> m_neck;
+    std::unique_ptr<ISimpleDevice> m_left_gripper;
+    std::unique_ptr<ISimpleDevice> m_right_gripper;
 };
 
 } // namespace asd_retail

@@ -51,6 +51,47 @@ ColumnStation ParseStation(const QJsonObject& object)
     station.m_pose = ParsePose(object.value("pose").toObject(object.value("chassis_pose").toObject()));
     return station;
 }
+
+// 工具函数：解析arm
+ArmDeviceConfig ParseArmDevice(const QJsonObject& object, const QString& default_name)
+{
+    ArmDeviceConfig config;
+    config.m_name = object.value("name").toString(default_name);
+    config.m_vendor = object.value("vendor").toString(config.m_vendor);
+    config.m_ip = object.value("ip").toString();
+    config.m_port = object.value("port").toInt();
+    config.m_dof = object.value("dof").toInt(config.m_dof);
+    config.m_enabled = object.value("enabled").toBool(true);
+    return config;
+}
+
+// 工具函数：解析底盘设备
+ChassisDeviceConfig ParseChassisDevice(const QJsonObject& object)
+{
+    ChassisDeviceConfig config;
+    config.m_name = object.value("name").toString(config.m_name);
+    config.m_vendor = object.value("vendor").toString();
+    config.m_ip = object.value("ip").toString();
+    config.m_port = object.value("port").toInt();
+    config.m_slave_id = object.value("slave_id").toInt(config.m_slave_id);
+    config.m_enabled = object.value("enabled").toBool(true);
+    return config;
+}
+
+// 工具函数：解析简单设备
+SimpleDeviceConfig ParseSimpleDevice(const QJsonObject& object, const QString& default_name, const QString& default_type)
+{
+    SimpleDeviceConfig config;
+    config.m_name = object.value("name").toString(default_name);
+    config.m_type = object.value("type").toString(default_type);
+    config.m_vendor = object.value("vendor").toString();
+    config.m_ip = object.value("ip").toString();
+    config.m_port = object.value("port").toInt();
+    config.m_device_id = object.value("device_id").toInt();
+    config.m_enabled = object.value("enabled").toBool(true);
+    config.m_position_tolerance = object.value("position_tolerance").toDouble(config.m_position_tolerance);
+    return config;
+}
 }
 
 bool ConfigLoader::Load(const QString& config_dir, RobotConfig& config, QString* error_message) const
@@ -59,6 +100,7 @@ bool ConfigLoader::Load(const QString& config_dir, RobotConfig& config, QString*
     RobotConfig loaded;
     if (!LoadStore(config_dir + "/store.json", loaded.m_store, error_message)) return false;
     if (!LoadFactories(config_dir + "/factories.json", loaded.m_factories, error_message)) return false;
+    if (!LoadHardware(config_dir + "/hardware.json", loaded.m_hardware, error_message)) return false;
     if (!LoadInterfaces(config_dir + "/interfaces.json", loaded.m_interfaces, error_message)) return false;
     if (!LoadTaskPolicy(config_dir + "/task_policy.json", loaded.m_task_policy, error_message)) return false;
     if (!LoadShelfLayout(config_dir + "/shelf_layout.json", loaded.m_shelf_layout, error_message)) return false;
@@ -88,6 +130,89 @@ bool ConfigLoader::LoadFactories(const QString& path, FactoryConfig& factories, 
     factories.m_tablet_factory = root.value("tablet_factory").toString(factories.m_tablet_factory);
     factories.m_voice_factory = root.value("voice_factory").toString(factories.m_voice_factory);
     factories.m_vision_factory = root.value("vision_factory").toString(factories.m_vision_factory);
+    return true;
+}
+
+bool ConfigLoader::LoadHardware(const QString& path, HardwareConfig& hardware, QString* error_message) const
+{
+    const QJsonObject root = ReadObject(path, error_message);
+    if (root.isEmpty()) return false;
+
+    const QJsonObject arms = root.value("arms").toObject();
+    hardware.m_left_arm = ParseArmDevice(arms.value("left").toObject(), "left_arm");
+    hardware.m_right_arm = ParseArmDevice(arms.value("right").toObject(), "right_arm");
+    hardware.m_chassis = ParseChassisDevice(root.value("chassis").toObject());
+    
+    const QJsonObject simple = root.value("simple_devices").toObject();
+    hardware.m_lift = ParseSimpleDevice(simple.value("lift").toObject(), "lift", "lift");
+    hardware.m_waist = ParseSimpleDevice(simple.value("waist").toObject(), "waist", "waist");
+    hardware.m_neck = ParseSimpleDevice(simple.value("neck").toObject(), "neck", "neck");
+    hardware.m_left_gripper = ParseSimpleDevice(simple.value("left_gripper").toObject(), "left_gripper", "gripper");
+    hardware.m_right_gripper = ParseSimpleDevice(simple.value("right_gripper").toObject(), "right_gripper", "gripper");
+    
+    auto validateArm =
+        [error_message, &path](const ArmDeviceConfig& config) -> bool
+    {
+        if (!config.m_enabled) return true;
+        if (config.m_vendor.isEmpty())
+        {
+            if (error_message)
+                *error_message = "机械臂 vendor 为空: " + config.m_name + ", file=" + path;
+            return false;
+        }
+        if (config.m_ip.isEmpty())
+        {
+            if (error_message)
+                *error_message = "机械臂 ip 为空: " + config.m_name + ", file=" + path;
+            return false;
+        }
+        if (config.m_dof <= 0)
+        {
+            if (error_message)
+                *error_message = "机械臂 dof 非法: " + config.m_name + ", file=" + path;
+            return false;
+        }
+        return true;
+    };
+
+    if (!validateArm(hardware.m_left_arm)) return false;
+    if (!validateArm(hardware.m_right_arm)) return false;
+    if (hardware.m_chassis.m_enabled)
+    {
+        if (hardware.m_chassis.m_vendor.isEmpty())
+        {
+            if (error_message)
+                *error_message = "底盘 vendor 为空: " + path;
+            return false;
+        }
+        if (hardware.m_chassis.m_ip.isEmpty())
+        {
+            if (error_message)
+                *error_message = "底盘 ip 为空: " + path;
+            return false;
+        }
+    }
+
+    const QList<SimpleDeviceConfig> simpleDevices = {hardware.m_lift, hardware.m_waist, hardware.m_neck, hardware.m_left_gripper, hardware.m_right_gripper};
+
+    for (const SimpleDeviceConfig& config : simpleDevices)
+    {
+        if (!config.m_enabled) continue;
+
+        if (config.m_type.isEmpty())
+        {
+            if (error_message)
+                *error_message = "简单设备 type 为空: " + config.m_name + ", file=" + path;
+            return false;
+        }
+        if (config.m_vendor.isEmpty())
+        {
+            if (error_message)
+                *error_message = "简单设备 vendor 为空: " + config.m_name + ", file=" + path;
+            return false;
+        }
+    }
+
     return true;
 }
 

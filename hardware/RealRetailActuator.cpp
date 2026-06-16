@@ -2,6 +2,10 @@
 // 注意：当前不引入任何厂家 SDK、ROS2 或 gRPC 依赖，只保留动作状态机 TODO 位置，保证项目可编译。
 #include "RealRetailActuator.h"
 
+#include "hardware/arm/ArmDeviceFactory.h"
+#include "hardware/chassis/ChassisDeviceFactory.h"
+#include "hardware/simple/SimpleDeviceFactory.h"
+
 #include <QVariant>
 
 
@@ -9,6 +13,10 @@ namespace asd_retail
 {
 RealRetailActuator::RealRetailActuator(QObject* parent)
     : ActionActuator(parent)
+{
+}
+
+RealRetailActuator::~RealRetailActuator()
 {
 }
 
@@ -74,8 +82,8 @@ QString RealRetailActuator::ErrStr() const
 
 void RealRetailActuator::Loop_ActSM_AgvMoveToStation(RobotAction& action)
 {
-    // TODO：参考Loop_ActSM_VisionDetectByProduct和Swit2Sta_actSM_VisionDetectByProduct，后续各个动作同理。
-    // 每一个Loop_ActSM_xxx，需对应一个swit2Sta_actSM_xxx
+    // TODO：参考Loop_ActSM_VisionDetectByProduct和Swit2Sta_ActSM_VisionDetectByProduct，后续各个动作同理。
+    // 每一个Loop_ActSM_xxx，需对应一个swit2Sta_ActSM_xxx
     Q_UNUSED(action)
 }
 
@@ -141,7 +149,7 @@ void RealRetailActuator::Loop_ActSM_VisionDetectByProduct(RobotAction& action)
 
     if (!m_vision_service)
     {
-        Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActFailure, "未注入视觉服务，无法请求 ROS2 视觉识别");
+        Swit2Sta_ActSM_VisionDetectByProduct(action, RobotAction::ActFailure, "未注入视觉服务，无法请求 ROS2 视觉识别");
         return;
     }
 
@@ -156,11 +164,11 @@ void RealRetailActuator::Loop_ActSM_VisionDetectByProduct(RobotAction& action)
         request.m_observe_profile = action.m_args.value("observe_profile").toString();
         action.m_args["request_id"] = request.m_request_id;
         action.m_started_at_ms = m_clock.elapsed();
-        Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActInitialized, "视觉请求参数已准备");
+        Swit2Sta_ActSM_VisionDetectByProduct(action, RobotAction::ActInitialized, "视觉请求参数已准备");
         if (!m_vision_service->RequestDetection(request))
-            Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActFailure, "ROS2 视觉请求发布失败");
+            Swit2Sta_ActSM_VisionDetectByProduct(action, RobotAction::ActFailure, "ROS2 视觉请求发布失败");
         else
-            Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActRunning, "ROS2 视觉请求已发布，等待结果");
+            Swit2Sta_ActSM_VisionDetectByProduct(action, RobotAction::ActRunning, "ROS2 视觉请求已发布，等待结果");
         return;
     }
 
@@ -173,7 +181,7 @@ void RealRetailActuator::Loop_ActSM_VisionDetectByProduct(RobotAction& action)
         const VisionResult result = m_vision_service->TakeResult(request_id);
         if (!result.m_success)
         {
-            Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActFailure, "视觉返回失败: " + result.error_message);
+            Swit2Sta_ActSM_VisionDetectByProduct(action, RobotAction::ActFailure, "视觉返回失败: " + result.error_message);
             return;
         }
         if (action.m_mission_args)
@@ -182,15 +190,15 @@ void RealRetailActuator::Loop_ActSM_VisionDetectByProduct(RobotAction& action)
             (*action.m_mission_args)["detected_pose"] = PoseToMap(result.m_detected_pose);
             (*action.m_mission_args)["confidence"] = result.m_confidence;
         }
-        Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActFinished, "视觉结果已写入 m_mission_args");
+        Swit2Sta_ActSM_VisionDetectByProduct(action, RobotAction::ActFinished, "视觉结果已写入 m_mission_args");
         return;
     }
 
     if (m_clock.elapsed() - action.m_started_at_ms > m_config.m_interfaces.m_vision.m_timeout_ms)
-        Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActFailure, "等待 ROS2 视觉结果超时");
+        Swit2Sta_ActSM_VisionDetectByProduct(action, RobotAction::ActFailure, "等待 ROS2 视觉结果超时");
 }
 
-void RealRetailActuator::Swit2Sta_actSM_VisionDetectByProduct(RobotAction& action, RobotAction::ActionSta nextSta, const QString& reason)
+void RealRetailActuator::Swit2Sta_ActSM_VisionDetectByProduct(RobotAction& action, RobotAction::ActionSta nextSta, const QString& reason)
 {
     emit LogMessage(QString("真实动作状态切换: %1 -> %2，原因: %3")
                         .arg(action.m_name)

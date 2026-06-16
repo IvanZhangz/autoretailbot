@@ -1,0 +1,88 @@
+{
+  "_comment": "真实硬件设备配置；factory 为 fake 时这些配置可保留但不会连接真实设备",
+
+  "arms": {
+    "left": {
+      "name": "left_arm",
+      "vendor": "realman",
+      "ip": "192.168.1.18",
+      "port": 8080,
+      "dof": 6,
+      "enabled": true
+    },
+    "right": {
+      "name": "right_arm",
+      "vendor": "realman",
+      "ip": "192.168.1.19",
+      "port": 8080,
+      "dof": 6,
+      "enabled": true
+    }
+  },
+
+  "chassis": {
+    "name": "chassis",
+    "vendor": "agv_vendor",
+    "ip": "192.168.1.100",
+    "port": 502,
+    "slave_id": 1,
+    "enabled": true
+  },
+
+  "simple_devices": {
+    "lift": {
+      "name": "lift",
+      "type": "lift",
+      "vendor": "modbus_lift",
+      "ip": "192.168.1.101",
+      "port": 502,
+      "device_id": 1,
+      "enabled": true,
+      "position_tolerance": 0.005
+    },
+
+    "waist": {
+      "name": "waist",
+      "type": "waist",
+      "vendor": "can_servo",
+      "ip": "",
+      "port": 0,
+      "device_id": 2,
+      "enabled": true,
+      "position_tolerance": 0.01
+    },
+
+    "neck": {
+      "name": "neck",
+      "type": "neck",
+      "vendor": "can_servo",
+      "ip": "",
+      "port": 0,
+      "device_id": 3,
+      "enabled": true,
+      "position_tolerance": 0.01
+    },
+
+    "left_gripper": {
+      "name": "left_gripper",
+      "type": "gripper",
+      "vendor": "realman_gripper",
+      "ip": "192.168.1.18",
+      "port": 8080,
+      "device_id": 1,
+      "enabled": true,
+      "position_tolerance": 0.01
+    },
+
+    "right_gripper": {
+      "name": "right_gripper",
+      "type": "gripper",
+      "vendor": "realman_gripper",
+      "ip": "192.168.1.19",
+      "port": 8080,
+      "device_id": 1,
+      "enabled": true,
+      "position_tolerance": 0.01
+    }
+  }
+}

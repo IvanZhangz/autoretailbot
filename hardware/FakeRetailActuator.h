@@ -12,15 +12,15 @@
 
 namespace asd_retail
 {
-class FakeSimpleDevice : public ISimpleDevice, public IChassisDevice, public IArmDevice
+class FakeSimpleDevice
 {
 public:
     // m_name 用于日志/状态文本中标识设备，例如 chassis 或 right_arm。
     explicit FakeSimpleDevice(QString m_name);
     // 保留真实硬件轮询入口；Fake 版本不做实际通讯。
-    void Loop() override;
+    void Loop();
     // 返回“设备名:状态”形式的文本，方便调试。
-    QString StatusText() const override;
+    QString StatusText() const;
     // 更新 Fake 设备状态文本。
     void SetStatus(const QString& text);
 

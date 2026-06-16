@@ -93,6 +93,57 @@ struct TaskPolicyConfig
     int m_loop_interval_ms = 20;   // 主控制循环周期。
 };
 
+// 单个机械臂配置。
+struct ArmDeviceConfig
+{
+    QString m_name;                 // left_arm / right_arm
+    QString m_vendor = "realman";   // realman / aubo / jaka / fake
+    QString m_ip;
+    int m_port = 0;
+    int m_dof = 6;
+    bool m_enabled = true;
+};
+
+// 底盘配置。
+struct ChassisDeviceConfig
+{
+    QString m_name = "chassis";
+    QString m_vendor;               // 具体厂家，例如 slamware、agv_vendor
+    QString m_ip;
+    int m_port = 0;
+    int m_slave_id = 1;             // 如果底盘使用 Modbus，可配置站号
+    bool m_enabled = true;
+};
+
+// 简单设备配置。
+struct SimpleDeviceConfig
+{
+    QString m_name;                 // lift / waist / neck / left_gripper...
+    QString m_type;                 // lift / waist / neck / gripper
+    QString m_vendor;
+    QString m_ip;
+    int m_port = 0;
+    int m_device_id = 0;            // CAN ID、Modbus站号等
+    bool m_enabled = true;
+
+    double m_position_tolerance = 0.01;
+};
+
+// 全部真实硬件配置。
+struct HardwareConfig
+{
+    ArmDeviceConfig m_left_arm;
+    ArmDeviceConfig m_right_arm;
+
+    ChassisDeviceConfig m_chassis;
+
+    SimpleDeviceConfig m_lift;
+    SimpleDeviceConfig m_waist;
+    SimpleDeviceConfig m_neck;
+    SimpleDeviceConfig m_left_gripper;
+    SimpleDeviceConfig m_right_gripper;
+};
+
 // 工厂配置：部署时选择 fake、真实硬件、ROS2 或 gRPC 适配器。
 struct FactoryConfig
 {
@@ -153,6 +204,7 @@ struct RobotConfig
     QMap<QString, ProductConfig> m_products; // 商品目录，key 为 product_id。
     QList<InventoryItem> m_inventory;      // 库存货位绑定。
     HomeConfig m_home;                     // 售卖点、放置点和空闲姿态。
+    HardwareConfig m_hardware;             // 真实硬件配置。
 };
 
 // 订单明细：当前 MVP 一次处理第一个商品。

@@ -10,6 +10,16 @@ TARGET = autoretailbot
 INCLUDEPATH += $$PWD
 DEFINES += PROJECT_SOURCE_DIR=\"$$PWD\"
 
+INCLUDEPATH+= config/ \
+    controller/ \
+    hardware/ \
+    hardware/arm/ \
+    hardware/chassis/ \
+    hardware/simple/ \
+    interfaces/ \
+    mission/ \
+    model/
+
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
@@ -18,6 +28,15 @@ SOURCES += \
     hardware/ActuatorFactory.cpp \
     hardware/FakeRetailActuator.cpp \
     hardware/RealRetailActuator.cpp \
+    hardware/arm/IArmDevice.h \
+    hardware/arm/ArmDeviceFactory.h \
+    hardware/arm/RealmanArmDevice.h \
+    hardware/chassis/IChassisDevice.h \
+    hardware/chassis/ChassisDeviceFactory.h \
+    hardware/chassis/VendorChassisDevice.h \
+    hardware/simple/ISimpleDevice.h \
+    hardware/simple/SimpleDeviceFactory.h \
+    hardware/simple/VendorSimpleDevice.h \
     interfaces/FakeTabletService.cpp \
     interfaces/FakeVisionService.cpp \
     interfaces/FakeVoiceService.cpp \
@@ -41,6 +60,12 @@ HEADERS += \
     hardware/FakeRetailActuator.h \
     hardware/HardwareInterfaces.h \
     hardware/RealRetailActuator.h \
+    hardware/arm/ArmDeviceFactory.cpp \
+    hardware/arm/RealmanArmDevice.cpp \
+    hardware/chassis/ChassisDeviceFactory.cpp \
+    hardware/chassis/VendorChassisDevice.cpp \
+    hardware/simple/SimpleDeviceFactory.cpp \
+    hardware/simple/VendorSimpleDevice.cpp \
     interfaces/FakeTabletService.h \
     interfaces/FakeVisionService.h \
     interfaces/FakeVoiceService.h \
@@ -52,7 +77,7 @@ HEADERS += \
     interfaces/VisionService.h \
     interfaces/VisionServiceFactory.h \
     interfaces/VoiceService.h \
-    interfaces/VoiceServiceFactory.h \
+    interfaces/VoiceServiceFactory.h \    
     mission/RobotMission.h \
     model/RobotTypes.h
 

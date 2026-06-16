@@ -13,33 +13,6 @@ namespace asd_retail
 {
 class VisionService;
 
-// 底盘接口抽象。
-class IChassisDevice
-{
-public:
-    virtual ~IChassisDevice() = default;
-    virtual void Loop() = 0;
-    virtual QString StatusText() const = 0;
-};
-
-// 机械臂接口抽象。
-class IArmDevice
-{
-public:
-    virtual ~IArmDevice() = default;
-    virtual void Loop() = 0;
-    virtual QString StatusText() const = 0;
-};
-
-// 升降/腰/颈/夹爪等通用设备接口抽象。
-class ISimpleDevice
-{
-public:
-    virtual ~ISimpleDevice() = default;
-    virtual void Loop() = 0;
-    virtual QString StatusText() const = 0;
-};
-
 // 动作执行器抽象
 class ActionActuator : public QObject
 {
