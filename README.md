@@ -146,7 +146,7 @@
 当前有两类执行器：
 
 - `FakeRetailActuator`：不依赖真实硬件，但已经按 `ActionType` 分发到动作状态机；普通动作使用短时间模拟完成，视觉动作通过 `VisionService` 获取结果。
-- `RealRetailActuator`：真实硬件骨架，`LoopAction()` 按 `ActionType` 分发到 `loop_actSM_xxx()`，每个动作内部按 `ActBegin/ActWait/ActInitialized/ActRunning/ActFailure/ActFinished` 留出 TODO。
+- `RealRetailActuator`：真实硬件骨架，`LoopAction()` 按 `ActionType` 分发到 `Loop_ActSM_xxx()`，每个动作内部按 `ActBegin/ActWait/ActInitialized/ActRunning/ActFailure/ActFinished` 留出 TODO。
 
 真实硬件后续应在 `RealRetailActuator` 中补齐：
 

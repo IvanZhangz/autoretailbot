@@ -35,27 +35,27 @@ void RealRetailActuator::LoopAction(RobotAction& action)
 {
     switch (action.m_type)
     {
-    case RobotAction::AgvMoveToStation: loop_actSM_AgvMoveToStation(action); break;
-    case RobotAction::LiftMoveToHeight: loop_actSM_LiftMoveToHeight(action); break;
-    case RobotAction::WaistRotateTo: loop_actSM_WaistRotateTo(action); break;
-    case RobotAction::NeckMoveTo: loop_actSM_NeckMoveTo(action); break;
-    case RobotAction::LeftArmMoveNamed: loop_actSM_LeftArmMoveNamed(action); break;
-    case RobotAction::RightArmMoveNamed: loop_actSM_RightArmMoveNamed(action); break;
-    case RobotAction::RightArmMoveL: loop_actSM_RightArmMoveL(action); break;
-    case RobotAction::RightArmMoveJNamed: loop_actSM_RightArmMoveJNamed(action); break;
-    case RobotAction::DualArmMoveL: loop_actSM_DualArmMoveL(action); break;
-    case RobotAction::DualArmMoveCarry: loop_actSM_DualArmMoveCarry(action); break;
-    case RobotAction::DualArmMovePlace: loop_actSM_DualArmMovePlace(action); break;
+    case RobotAction::AgvMoveToStation: Loop_ActSM_AgvMoveToStation(action); break;
+    case RobotAction::LiftMoveToHeight: Loop_ActSM_LiftMoveToHeight(action); break;
+    case RobotAction::WaistRotateTo: Loop_ActSM_WaistRotateTo(action); break;
+    case RobotAction::NeckMoveTo: Loop_ActSM_NeckMoveTo(action); break;
+    case RobotAction::LeftArmMoveNamed: Loop_ActSM_LeftArmMoveNamed(action); break;
+    case RobotAction::RightArmMoveNamed: Loop_ActSM_RightArmMoveNamed(action); break;
+    case RobotAction::RightArmMoveL: Loop_ActSM_RightArmMoveL(action); break;
+    case RobotAction::RightArmMoveJNamed: Loop_ActSM_RightArmMoveJNamed(action); break;
+    case RobotAction::DualArmMoveL: Loop_ActSM_DualArmMoveL(action); break;
+    case RobotAction::DualArmMoveCarry: Loop_ActSM_DualArmMoveCarry(action); break;
+    case RobotAction::DualArmMovePlace: Loop_ActSM_DualArmMovePlace(action); break;
     case RobotAction::LeftGripperOpen:
     case RobotAction::RightGripperOpen:
     case RobotAction::BothGrippersOpen:
     case RobotAction::LeftGripperClose:
     case RobotAction::RightGripperClose:
     case RobotAction::BothGrippersClose:
-        loop_actSM_Gripper(action);
+        Loop_ActSM_Gripper(action);
         break;
     case RobotAction::VisionDetectByProduct:
-        loop_actSM_VisionDetectByProduct(action);
+        Loop_ActSM_VisionDetectByProduct(action);
         break;
     default:
         break;
@@ -72,76 +72,76 @@ QString RealRetailActuator::ErrStr() const
     return m_error_text;
 }
 
-void RealRetailActuator::loop_actSM_AgvMoveToStation(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_AgvMoveToStation(RobotAction& action)
 {
-    // TODO：参考loop_actSM_VisionDetectByProduct和swit2Sta_actSM_VisionTargetIdentyById，后续各个动作同理。
-    // 每一个loop_actSM_xxx，需对应一个swit2Sta_actSM_xxx
+    // TODO：参考Loop_ActSM_VisionDetectByProduct和Swit2Sta_actSM_VisionDetectByProduct，后续各个动作同理。
+    // 每一个Loop_ActSM_xxx，需对应一个swit2Sta_actSM_xxx
     Q_UNUSED(action)
 }
 
-void RealRetailActuator::loop_actSM_LiftMoveToHeight(RobotAction& action)
-{
-    Q_UNUSED(action)
-}
-
-void RealRetailActuator::loop_actSM_WaistRotateTo(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_LiftMoveToHeight(RobotAction& action)
 {
     Q_UNUSED(action)
 }
 
-void RealRetailActuator::loop_actSM_NeckMoveTo(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_WaistRotateTo(RobotAction& action)
 {
     Q_UNUSED(action)
 }
 
-void RealRetailActuator::loop_actSM_LeftArmMoveNamed(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_NeckMoveTo(RobotAction& action)
 {
     Q_UNUSED(action)
 }
 
-void RealRetailActuator::loop_actSM_RightArmMoveNamed(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_LeftArmMoveNamed(RobotAction& action)
 {
     Q_UNUSED(action)
 }
 
-void RealRetailActuator::loop_actSM_RightArmMoveL(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_RightArmMoveNamed(RobotAction& action)
 {
     Q_UNUSED(action)
 }
 
-void RealRetailActuator::loop_actSM_RightArmMoveJNamed(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_RightArmMoveL(RobotAction& action)
 {
     Q_UNUSED(action)
 }
 
-void RealRetailActuator::loop_actSM_DualArmMoveL(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_RightArmMoveJNamed(RobotAction& action)
 {
     Q_UNUSED(action)
 }
 
-void RealRetailActuator::loop_actSM_DualArmMoveCarry(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_DualArmMoveL(RobotAction& action)
 {
     Q_UNUSED(action)
 }
 
-void RealRetailActuator::loop_actSM_DualArmMovePlace(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_DualArmMoveCarry(RobotAction& action)
 {
     Q_UNUSED(action)
 }
 
-void RealRetailActuator::loop_actSM_Gripper(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_DualArmMovePlace(RobotAction& action)
 {
     Q_UNUSED(action)
 }
 
-void RealRetailActuator::loop_actSM_VisionDetectByProduct(RobotAction& action)
+void RealRetailActuator::Loop_ActSM_Gripper(RobotAction& action)
+{
+    Q_UNUSED(action)
+}
+
+void RealRetailActuator::Loop_ActSM_VisionDetectByProduct(RobotAction& action)
 {
     if (action.m_sta == RobotAction::ActFinished || action.m_sta == RobotAction::ActFailure)
         return;
 
     if (!m_vision_service)
     {
-        swit2Sta_actSM_VisionTargetIdentyById(action, RobotAction::ActFailure, "未注入视觉服务，无法请求 ROS2 视觉识别");
+        Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActFailure, "未注入视觉服务，无法请求 ROS2 视觉识别");
         return;
     }
 
@@ -156,11 +156,11 @@ void RealRetailActuator::loop_actSM_VisionDetectByProduct(RobotAction& action)
         request.m_observe_profile = action.m_args.value("observe_profile").toString();
         action.m_args["request_id"] = request.m_request_id;
         action.m_started_at_ms = m_clock.elapsed();
-        swit2Sta_actSM_VisionTargetIdentyById(action, RobotAction::ActInitialized, "视觉请求参数已准备");
+        Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActInitialized, "视觉请求参数已准备");
         if (!m_vision_service->RequestDetection(request))
-            swit2Sta_actSM_VisionTargetIdentyById(action, RobotAction::ActFailure, "ROS2 视觉请求发布失败");
+            Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActFailure, "ROS2 视觉请求发布失败");
         else
-            swit2Sta_actSM_VisionTargetIdentyById(action, RobotAction::ActRunning, "ROS2 视觉请求已发布，等待结果");
+            Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActRunning, "ROS2 视觉请求已发布，等待结果");
         return;
     }
 
@@ -173,7 +173,7 @@ void RealRetailActuator::loop_actSM_VisionDetectByProduct(RobotAction& action)
         const VisionResult result = m_vision_service->TakeResult(request_id);
         if (!result.m_success)
         {
-            swit2Sta_actSM_VisionTargetIdentyById(action, RobotAction::ActFailure, "视觉返回失败: " + result.error_message);
+            Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActFailure, "视觉返回失败: " + result.error_message);
             return;
         }
         if (action.m_mission_args)
@@ -182,15 +182,15 @@ void RealRetailActuator::loop_actSM_VisionDetectByProduct(RobotAction& action)
             (*action.m_mission_args)["detected_pose"] = PoseToMap(result.m_detected_pose);
             (*action.m_mission_args)["confidence"] = result.m_confidence;
         }
-        swit2Sta_actSM_VisionTargetIdentyById(action, RobotAction::ActFinished, "视觉结果已写入 m_mission_args");
+        Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActFinished, "视觉结果已写入 m_mission_args");
         return;
     }
 
     if (m_clock.elapsed() - action.m_started_at_ms > m_config.m_interfaces.m_vision.m_timeout_ms)
-        swit2Sta_actSM_VisionTargetIdentyById(action, RobotAction::ActFailure, "等待 ROS2 视觉结果超时");
+        Swit2Sta_actSM_VisionDetectByProduct(action, RobotAction::ActFailure, "等待 ROS2 视觉结果超时");
 }
 
-void RealRetailActuator::swit2Sta_actSM_VisionTargetIdentyById(RobotAction& action, RobotAction::ActionSta nextSta, const QString& reason)
+void RealRetailActuator::Swit2Sta_actSM_VisionDetectByProduct(RobotAction& action, RobotAction::ActionSta nextSta, const QString& reason)
 {
     emit LogMessage(QString("真实动作状态切换: %1 -> %2，原因: %3")
                         .arg(action.m_name)

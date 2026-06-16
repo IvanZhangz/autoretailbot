@@ -112,7 +112,7 @@ void FakeRetailActuator::LoopAction(RobotAction& action)
     default:
         m_error = true;
         m_error_text = "Fake 不支持动作类型: " + action.m_name;
-        switchActionState(action, RobotAction::ActFailure, m_error_text);
+        SwitchActionState(action, RobotAction::ActFailure, m_error_text);
         break;
     }
 }
@@ -136,18 +136,18 @@ void FakeRetailActuator::LoopTimedAction(RobotAction& action, const QString& dev
     {
         action.m_started_at_ms = m_clock.elapsed();
         SetDeviceStatus(deviceName, "running:" + action.m_name);
-        switchActionState(action, RobotAction::ActRunning, "Fake 定时动作启动");
+        SwitchActionState(action, RobotAction::ActRunning, "Fake 定时动作启动");
         return;
     }
 
     if (action.m_sta != RobotAction::ActRunning)
         return;
 
-    if (m_clock.elapsed() - action.m_started_at_ms < durationMs(action))
+    if (m_clock.elapsed() - action.m_started_at_ms < DurationMs(action))
         return;
 
     SetDeviceStatus(deviceName, "idle");
-    switchActionState(action, RobotAction::ActFinished, "Fake 定时动作完成");
+    SwitchActionState(action, RobotAction::ActFinished, "Fake 定时动作完成");
 }
 
 void FakeRetailActuator::LoopVisionDetectByProduct(RobotAction& action)
@@ -157,7 +157,7 @@ void FakeRetailActuator::LoopVisionDetectByProduct(RobotAction& action)
 
     if (!m_vision_service)
     {
-        switchActionState(action, RobotAction::ActFailure, "未注入视觉服务");
+        SwitchActionState(action, RobotAction::ActFailure, "未注入视觉服务");
         return;
     }
 
@@ -176,10 +176,10 @@ void FakeRetailActuator::LoopVisionDetectByProduct(RobotAction& action)
         action.m_started_at_ms = m_clock.elapsed();
         if (!m_vision_service->RequestDetection(request))
         {
-            switchActionState(action, RobotAction::ActFailure, "视觉请求发送失败");
+            SwitchActionState(action, RobotAction::ActFailure, "视觉请求发送失败");
             return;
         }
-        switchActionState(action, RobotAction::ActRunning, "等待视觉结果");
+        SwitchActionState(action, RobotAction::ActRunning, "等待视觉结果");
         return;
     }
 
@@ -192,7 +192,7 @@ void FakeRetailActuator::LoopVisionDetectByProduct(RobotAction& action)
         const VisionResult result = m_vision_service->TakeResult(request_id);
         if (!result.m_success)
         {
-            switchActionState(action, RobotAction::ActFailure, "视觉识别失败: " + result.error_message);
+            SwitchActionState(action, RobotAction::ActFailure, "视觉识别失败: " + result.error_message);
             return;
         }
         if (action.m_mission_args)
@@ -201,15 +201,15 @@ void FakeRetailActuator::LoopVisionDetectByProduct(RobotAction& action)
             (*action.m_mission_args)["detected_pose"] = PoseToMap(result.m_detected_pose);
             (*action.m_mission_args)["confidence"] = result.m_confidence;
         }
-        switchActionState(action, RobotAction::ActFinished, "视觉识别完成");
+        SwitchActionState(action, RobotAction::ActFinished, "视觉识别完成");
         return;
     }
 
     if (m_clock.elapsed() - action.m_started_at_ms > m_config.m_interfaces.m_vision.m_timeout_ms)
-        switchActionState(action, RobotAction::ActFailure, "视觉识别超时");
+        SwitchActionState(action, RobotAction::ActFailure, "视觉识别超时");
 }
 
-void FakeRetailActuator::switchActionState(RobotAction& action, RobotAction::ActionSta nextSta, const QString& reason)
+void FakeRetailActuator::SwitchActionState(RobotAction& action, RobotAction::ActionSta nextSta, const QString& reason)
 {
     action.m_sta = nextSta;
     emit LogMessage(QString("Fake 动作状态切换: %1 -> %2，原因: %3")
@@ -218,7 +218,7 @@ void FakeRetailActuator::switchActionState(RobotAction& action, RobotAction::Act
                         .arg(reason));
 }
 
-int FakeRetailActuator::durationMs(const RobotAction& action) const
+int FakeRetailActuator::DurationMs(const RobotAction& action) const
 {
     Q_UNUSED(action);
     return 150;

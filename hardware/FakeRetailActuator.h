@@ -55,9 +55,9 @@ private:
     // Fake 视觉动作状态机：通过 VisionService 发送请求、轮询结果并写入 m_mission_args。
     void LoopVisionDetectByProduct(RobotAction& action);
     // 状态切换工具：统一记录日志，便于观察 Begin/Running/Finished 等状态变化。
-    void switchActionState(RobotAction& action, RobotAction::ActionSta nextSta, const QString& reason);
+    void SwitchActionState(RobotAction& action, RobotAction::ActionSta nextSta, const QString& reason);
     // 每个动作模拟耗时，当前统一返回 150ms。
-    int durationMs(const RobotAction& action) const;
+    int DurationMs(const RobotAction& action) const;
     // 把 Pose 转成 QVariantMap，写入 mission.m_args。
     QVariantMap PoseToMap(const Pose& pose) const;
     // 根据动作类型更新对应 Fake 设备状态文本。
