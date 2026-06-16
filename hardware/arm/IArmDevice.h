@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model/RobotTypes.h"
+#include "RobotTypes.h"
 
 #include <QString>
 #include <QVector>

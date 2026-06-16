@@ -3,7 +3,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "controller/RobotController.h"
+#include "RobotController.h"
 
 #include <QCoreApplication>
 #include <QDir>

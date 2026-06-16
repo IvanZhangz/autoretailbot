@@ -2,12 +2,12 @@
 // LoopAction 先按 ActionType 分发，再在每个 Loop_ActSM_xxx 中按 ActionSta 轮询状态机。
 #pragma once
 
-#include "hardware/HardwareInterfaces.h"
-#include "interfaces/VisionService.h"
+#include "HardwareInterfaces.h"
+#include "VisionService.h"
 
-#include "hardware/arm/IArmDevice.h"
-#include "hardware/chassis/IChassisDevice.h"
-#include "hardware/simple/ISimpleDevice.h"
+#include "IArmDevice.h"
+#include "IChassisDevice.h"
+#include "ISimpleDevice.h"
 
 #include <QElapsedTimer>
 

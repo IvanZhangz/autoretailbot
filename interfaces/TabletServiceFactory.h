@@ -2,7 +2,7 @@
 // 根据 m_factories.m_tablet_factory 创建 fake 或 grpc 平板服务。
 #pragma once
 
-#include "interfaces/TabletService.h"
+#include "TabletService.h"
 
 #include <memory>
 

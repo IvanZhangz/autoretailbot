@@ -2,7 +2,7 @@
 // 根据 m_factories.m_vision_factory 创建 fake 或 ros2 视觉服务。
 #pragma once
 
-#include "interfaces/VisionService.h"
+#include "VisionService.h"
 
 #include <memory>
 

@@ -2,7 +2,7 @@
 // 配置按门店、工厂、接口、任务策略、货架、商品、库存、home 分文件保存，便于多门店复用和部署替换。
 #pragma once
 
-#include "model/RobotTypes.h"
+#include "RobotTypes.h"
 
 #include <QString>
 

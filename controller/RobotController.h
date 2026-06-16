@@ -2,15 +2,15 @@
 // MainWindow 初始化该 Controller；Controller 负责初始化部件、startTimer、timerEvent、Loop、LoopWorkSM。
 #pragma once
 
-#include "config/ConfigLoader.h"
-#include "hardware/ActuatorFactory.h"
-#include "interfaces/TabletService.h"
-#include "interfaces/TabletServiceFactory.h"
-#include "interfaces/VoiceService.h"
-#include "interfaces/VoiceServiceFactory.h"
-#include "interfaces/VisionService.h"
-#include "interfaces/VisionServiceFactory.h"
-#include "mission/RobotMission.h"
+#include "ConfigLoader.h"
+#include "ActuatorFactory.h"
+#include "TabletService.h"
+#include "TabletServiceFactory.h"
+#include "VoiceService.h"
+#include "VoiceServiceFactory.h"
+#include "VisionService.h"
+#include "VisionServiceFactory.h"
+#include "RobotMission.h"
 
 #include <QObject>
 #include <QQueue>

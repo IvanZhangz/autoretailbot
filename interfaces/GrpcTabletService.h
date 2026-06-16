@@ -2,7 +2,7 @@
 // 当前不引入 grpcpp 依赖，只保留可编译 TODO；真实接入时在此实现 gRPC Server。
 #pragma once
 
-#include "interfaces/TabletService.h"
+#include "TabletService.h"
 
 
 namespace asd_retail

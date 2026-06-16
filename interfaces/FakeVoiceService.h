@@ -2,7 +2,7 @@
 // Fake 不连接 ROS2，只打印状态和任务结果日志。
 #pragma once
 
-#include "interfaces/VoiceService.h"
+#include "VoiceService.h"
 
 
 namespace asd_retail

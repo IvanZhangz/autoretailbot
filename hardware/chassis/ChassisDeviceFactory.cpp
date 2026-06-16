@@ -1,6 +1,6 @@
 #include "ChassisDeviceFactory.h"
 
-#include "hardware/chassis/VendorChassisDevice.h"
+#include "VendorChassisDevice.h"
 
 namespace asd_retail
 {

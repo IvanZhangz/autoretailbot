@@ -2,9 +2,9 @@
 // 注意：当前不引入任何厂家 SDK、ROS2 或 gRPC 依赖，只保留动作状态机 TODO 位置，保证项目可编译。
 #include "RealRetailActuator.h"
 
-#include "hardware/arm/ArmDeviceFactory.h"
-#include "hardware/chassis/ChassisDeviceFactory.h"
-#include "hardware/simple/SimpleDeviceFactory.h"
+#include "ArmDeviceFactory.h"
+#include "ChassisDeviceFactory.h"
+#include "SimpleDeviceFactory.h"
 
 #include <QVariant>
 

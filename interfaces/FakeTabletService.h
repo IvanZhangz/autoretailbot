@@ -2,7 +2,7 @@
 // Fake 不启动真实 gRPC，只保留订单队列和日志，方便 Qt 调试界面模拟平板下单。
 #pragma once
 
-#include "interfaces/TabletService.h"
+#include "TabletService.h"
 
 
 namespace asd_retail

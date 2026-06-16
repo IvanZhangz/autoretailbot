@@ -2,7 +2,7 @@
 // 当前不引入 rclcpp 依赖，只保留可编译 TODO；真实接入时在此订阅语音订单并发布状态/结果。
 #pragma once
 
-#include "interfaces/VoiceService.h"
+#include "VoiceService.h"
 
 
 namespace asd_retail

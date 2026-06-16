@@ -2,7 +2,7 @@
 // 感知视觉是独立软件，真实接入通过 ROS2 请求/结果消息与机器人控制系统交互。
 #pragma once
 
-#include "model/RobotTypes.h"
+#include "RobotTypes.h"
 
 #include <QObject>
 #include <QMap>

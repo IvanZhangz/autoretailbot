@@ -2,7 +2,7 @@
 // 当前不引入 rclcpp 依赖，只保留可编译 TODO；真实接入时与独立视觉软件通过 ROS2 topic 交互。
 #pragma once
 
-#include "interfaces/VisionService.h"
+#include "VisionService.h"
 
 
 namespace asd_retail

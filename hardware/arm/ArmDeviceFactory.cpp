@@ -1,6 +1,6 @@
 #include "ArmDeviceFactory.h"
 
-#include "hardware/arm/RealmanArmDevice.h"
+#include "RealmanArmDevice.h"
 
 namespace asd_retail
 {

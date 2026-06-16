@@ -2,8 +2,8 @@
 // Fake 执行器不依赖真实硬件，但仍按 ActionType 分发到各动作状态机，结构与真实执行器保持一致。
 #pragma once
 
-#include "hardware/HardwareInterfaces.h"
-#include "interfaces/VisionService.h"
+#include "HardwareInterfaces.h"
+#include "VisionService.h"
 
 #include <QElapsedTimer>
 #include <memory>

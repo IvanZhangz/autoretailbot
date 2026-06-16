@@ -1,7 +1,7 @@
 #pragma once
 
-#include "hardware/simple/ISimpleDevice.h"
-#include "model/RobotTypes.h"
+#include "ISimpleDevice.h"
+#include "RobotTypes.h"
 
 #include <memory>
 

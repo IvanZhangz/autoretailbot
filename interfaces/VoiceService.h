@@ -2,7 +2,7 @@
 // 真实语音软件通过 ROS2 topic 与机器人控制系统交互，Fake 实现只保留队列和日志。
 #pragma once
 
-#include "model/RobotTypes.h"
+#include "RobotTypes.h"
 
 #include <QObject>
 #include <QQueue>

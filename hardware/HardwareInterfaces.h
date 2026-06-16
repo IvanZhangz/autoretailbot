@@ -2,8 +2,8 @@
 // Controller 不直接依赖具体厂家 SDK，只通过 ActionActuator 轮询设备和动作。
 #pragma once
 
-#include "mission/RobotMission.h"
-#include "model/RobotTypes.h"
+#include "RobotMission.h"
+#include "RobotTypes.h"
 
 #include <QObject>
 #include <QString>

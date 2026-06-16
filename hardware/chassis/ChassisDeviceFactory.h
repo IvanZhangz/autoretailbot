@@ -1,7 +1,7 @@
 #pragma once
 
-#include "hardware/chassis/IChassisDevice.h"
-#include "model/RobotTypes.h"
+#include "IChassisDevice.h"
+#include "RobotTypes.h"
 
 #include <memory>
 

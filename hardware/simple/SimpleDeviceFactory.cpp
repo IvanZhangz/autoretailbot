@@ -1,6 +1,6 @@
 #include "SimpleDeviceFactory.h"
 
-#include "hardware/simple/VendorSimpleDevice.h"
+#include "VendorSimpleDevice.h"
 
 namespace asd_retail
 {

@@ -2,7 +2,7 @@
 // Fake 不连接 ROS2，请求到达后立即/短延迟生成一个模拟 detected_pose，便于本地验证任务流程。
 #pragma once
 
-#include "interfaces/VisionService.h"
+#include "VisionService.h"
 
 
 namespace asd_retail

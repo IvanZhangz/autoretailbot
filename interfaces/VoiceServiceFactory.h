@@ -2,7 +2,7 @@
 // 根据 m_factories.m_voice_factory 创建 fake 或 ros2 语音服务。
 #pragma once
 
-#include "interfaces/VoiceService.h"
+#include "VoiceService.h"
 
 #include <memory>
 

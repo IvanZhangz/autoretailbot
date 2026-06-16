@@ -2,7 +2,7 @@
 // 真实平板通过 gRPC 与机器人控制系统交互；Fake 实现继续服务 Qt 调试按钮。
 #pragma once
 
-#include "model/RobotTypes.h"
+#include "RobotTypes.h"
 
 #include <QObject>
 #include <QQueue>
