@@ -25,6 +25,15 @@ bool RealRetailActuator::Init(const RobotConfig& config)
     m_config = config;
     m_clock.start();
     // TODO: 在这里初始化真实底盘、机械臂、升降、腰、头、夹爪等设备 SDK 或通讯连接。
+    // m_left_arm = ArmDeviceFactory::Create(config.m_hardware.m_left_arm);
+    // m_right_arm = ArmDeviceFactory::Create(config.m_hardware.m_right_arm);
+    // m_chassis = ChassisDeviceFactory::Create(config.m_hardware.m_chassis);
+    // m_lift = SimpleDeviceFactory::Create(config.m_hardware.m_lift);
+    // m_waist = SimpleDeviceFactory::Create(config.m_hardware.m_waist);
+    // m_neck = SimpleDeviceFactory::Create(config.m_hardware.m_neck);
+    // m_left_gripper = SimpleDeviceFactory::Create(config.m_hardware.m_left_gripper);
+    // m_right_gripper = SimpleDeviceFactory::Create(config.m_hardware.m_right_gripper);
+
     emit LogMessage("真实硬件执行器骨架初始化完成：等待填充设备 SDK TODO");
     return true;
 }

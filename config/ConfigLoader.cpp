@@ -341,8 +341,8 @@ bool ConfigLoader::LoadHome(const QString& path, HomeConfig& home, QString* erro
     home.m_counter_place_pose = ParsePose(root.value("counter_place_pose").toObject());
     // idle_posture 描述任务结束后的空闲姿态。
     const QJsonObject idle = root.value("idle_posture").toObject();
-    home.m_left_arm_home = idle.value("left_arhome").toString(home.m_left_arm_home);
-    home.m_right_arm_home = idle.value("right_arhome").toString(home.m_right_arm_home);
+    home.m_left_arm_home = idle.value("left_arm_home").toString(home.m_left_arm_home);
+    home.m_right_arm_home = idle.value("right_arm_home").toString(home.m_right_arm_home);
     home.m_waist_home_yaw = idle.value("waist_home_yaw").toDouble();
     home.m_neck_home_yaw = idle.value("neck_home_yaw").toDouble();
     home.m_neck_home_pitch = idle.value("neck_home_pitch").toDouble();

@@ -94,54 +94,58 @@ struct TaskPolicyConfig
 };
 
 // 单个机械臂配置。
+/*
+    当前任务生成逻辑会根据商品package_type == "boxed" 决定是否使用双臂，
+    没有针对左臂disabled时禁止生成双臂任务的完整保护逻辑。
+*/
 struct ArmDeviceConfig
 {
     QString m_name;                 // left_arm / right_arm
     QString m_vendor = "realman";   // realman / aubo / jaka / fake
-    QString m_ip;
-    int m_port = 0;
-    int m_dof = 6;
-    bool m_enabled = true;
+    QString m_ip;                   // 机械臂控制器的网络 IP 地址。
+    int m_port = 0;                 // 机械臂控制器的网络端口号，0 表示未配置或由具体 SDK 使用默认端口。
+    int m_dof = 6;                  // 机械臂自由度。
+    bool m_enabled = true;          // 是否启用该机械臂设备。
 };
 
 // 底盘配置。
 struct ChassisDeviceConfig
 {
-    QString m_name = "chassis";
+    QString m_name = "chassis";     // 底盘在系统中的逻辑名称。
     QString m_vendor;               // 具体厂家，例如 slamware、agv_vendor
-    QString m_ip;
-    int m_port = 0;
-    int m_slave_id = 1;             // 如果底盘使用 Modbus，可配置站号
-    bool m_enabled = true;
+    QString m_ip;                   // 底盘控制器的网络 IP 地址。
+    int m_port = 0;                 // 底盘控制器的网络端口号。
+    int m_slave_id = 1;             // 如果底盘使用 Modbus，可配置设备地址或从站地址，1 表示 Modbus Server Address。
+    bool m_enabled = true;          // 是否启用底盘设备。
 };
 
 // 简单设备配置。
 struct SimpleDeviceConfig
 {
-    QString m_name;                 // lift / waist / neck / left_gripper...
-    QString m_type;                 // lift / waist / neck / gripper
-    QString m_vendor;
-    QString m_ip;
-    int m_port = 0;
-    int m_device_id = 0;            // CAN ID、Modbus站号等
-    bool m_enabled = true;
+    QString m_name;                 // 设备在系统中的逻辑名称：lift / waist / neck / left_gripper...
+    QString m_type;                 // 设备功能类型：lift / waist / neck / gripper
+    QString m_vendor;               // 设备厂家或驱动实现名称，该字段决定底层调用哪个SDK或通信协议。
+    QString m_ip;                   // 设备 IP 地址。
+    int m_port = 0;                 // 设备通信端口。
+    int m_device_id = 0;            // 设备地址或设备编号。
+    bool m_enabled = true;          // 是否启用该设备。
 
-    double m_position_tolerance = 0.01;
+    double m_position_tolerance = 0.01; // 位置到位容差，必须确保配置单位与设备接口中的位置单位一致。
 };
 
 // 全部真实硬件配置。
 struct HardwareConfig
 {
-    ArmDeviceConfig m_left_arm;
-    ArmDeviceConfig m_right_arm;
+    ArmDeviceConfig m_left_arm;             // 左机械臂配置。
+    ArmDeviceConfig m_right_arm;            // 右机械臂配置。
 
-    ChassisDeviceConfig m_chassis;
+    ChassisDeviceConfig m_chassis;          // 移动底盘配置。
 
-    SimpleDeviceConfig m_lift;
-    SimpleDeviceConfig m_waist;
-    SimpleDeviceConfig m_neck;
-    SimpleDeviceConfig m_left_gripper;
-    SimpleDeviceConfig m_right_gripper;
+    SimpleDeviceConfig m_lift;              // 升降设备配置。
+    SimpleDeviceConfig m_waist;             // 腰部设备配置。
+    SimpleDeviceConfig m_neck;              // 颈部设备配置。
+    SimpleDeviceConfig m_left_gripper;      // 左夹爪设备配置。
+    SimpleDeviceConfig m_right_gripper;     // 右夹爪设备配置。
 };
 
 // 工厂配置：部署时选择 fake、真实硬件、ROS2 或 gRPC 适配器。
