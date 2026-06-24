@@ -72,6 +72,8 @@ private:
     QVariantMap StationArgs(const ColumnStation& station) const;
     // 标记任务完成/失败，并把结果上报给外部服务。
     void FinishMission(bool success, const QString& message);
+    // 任务成功后再从本进程内存库存扣减本次取出的商品。
+    void ConsumeMissionInventory();
     // 更新 Controller 状态，避免重复广播同一个状态。
     void SetState(const QString& state);
 

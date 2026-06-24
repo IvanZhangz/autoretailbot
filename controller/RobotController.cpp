@@ -328,12 +328,46 @@ void RobotController::AppendHomeBeat(RobotMission& mission)
 // 任务结束后统一上报结果，并把状态切回“空闲”或“错误”。
 void RobotController::FinishMission(bool success, const QString& message)
 {
+    if (success)
+        ConsumeMissionInventory();
+
     m_mission.m_is_finished = true;
     m_mission.m_is_end = true;
     TaskResult result{success, m_mission.m_order_id, success ? QString() : "MISSION_FAILED", message};
     if (m_tablet_service) m_tablet_service->ReportTaskResult(result);
     if (m_voice_service) m_voice_service->ReportTaskResult(result);
     SetState(success ? "空闲" : "错误");
+}
+
+void RobotController::ConsumeMissionInventory()
+{
+    const QString productId = m_mission.m_args.value("product_id").toString();
+    const QString slotId = m_mission.m_args.value("slot_id").toString();
+    if (productId.isEmpty() || slotId.isEmpty())
+        return;
+
+    for (InventoryItem& item : m_config.m_inventory)
+    {
+        if (item.m_enabled && item.m_product_id == productId && item.m_slot_id == slotId)
+        {
+            if (item.m_quantity <= 0)
+            {
+                emit LogMessage(QString("库存扣减跳过: product=%1 slot=%2 quantity=%3")
+                                    .arg(productId, slotId)
+                                    .arg(item.m_quantity));
+                return;
+            }
+
+            --item.m_quantity;
+            emit LogMessage(QString("库存已扣减: product=%1 slot=%2 remaining=%3")
+                                .arg(productId, slotId)
+                                .arg(item.m_quantity));
+            return;
+        }
+    }
+
+    emit LogMessage(QString("库存扣减失败: 未找到 product=%1 slot=%2")
+                        .arg(productId, slotId));
 }
 
 void RobotController::SetState(const QString& state)
