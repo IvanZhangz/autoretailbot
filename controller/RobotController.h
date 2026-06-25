@@ -74,6 +74,8 @@ private:
     void FinishMission(bool success, const QString& message);
     // 任务成功后再从本进程内存库存扣减本次取出的商品。
     void ConsumeMissionInventory();
+    // 普通任务动作失败时，先切换到回 home 恢复任务；恢复完成后再按原失败原因结束。
+    void BeginFailureRecovery(const QString& failure_message);
     // 更新 Controller 状态，避免重复广播同一个状态。
     void SetState(const QString& state);
 
@@ -84,6 +86,8 @@ private:
     QString m_state = "未初始化"; // 当前机器人状态文本。
     QQueue<Order> m_order_queue;    // 平板/语音订单汇总后的待执行队列。
     RobotMission m_mission;        // 当前正在执行或刚结束的任务。
+    bool m_recovering_from_failure = false; // 动作失败后是否正在执行回 home 恢复任务。
+    QString m_recovery_failure_message;     // 恢复任务完成后要上报的原始失败原因。
 
     std::unique_ptr<ActionActuator> m_actuator;          // 硬件动作执行器。
     std::unique_ptr<TabletService> m_tablet_service;      // 平板服务实例，fake 或 gRPC。

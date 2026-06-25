@@ -167,7 +167,10 @@ void RobotController::LoopWorkSM()
             if (action.m_sta == RobotAction::ActFailure)
             {
                 m_mission.ErrStr = "动作失败: " + action.m_name;
-                FinishMission(false, m_mission.ErrStr);
+                if (m_recovering_from_failure)
+                    FinishMission(false, m_recovery_failure_message + "；回home失败: " + action.m_name);
+                else
+                    BeginFailureRecovery(m_mission.ErrStr);
                 return;
             }
             if (action.m_sta != RobotAction::ActFinished)
@@ -181,7 +184,10 @@ void RobotController::LoopWorkSM()
         return;
     }
 
-    FinishMission(true, "任务完成");
+    if (m_recovering_from_failure)
+        FinishMission(false, m_recovery_failure_message);
+    else
+        FinishMission(true, "任务完成");
 }
 
 ColumnStation RobotController::StationForSlot(const ShelfSlot& slot) const
@@ -331,6 +337,8 @@ void RobotController::FinishMission(bool success, const QString& message)
     if (success)
         ConsumeMissionInventory();
 
+    m_recovering_from_failure = false;
+    m_recovery_failure_message.clear();
     m_mission.m_is_finished = true;
     m_mission.m_is_end = true;
     TaskResult result{success, m_mission.m_order_id, success ? QString() : "MISSION_FAILED", message};
@@ -368,6 +376,23 @@ void RobotController::ConsumeMissionInventory()
 
     emit LogMessage(QString("库存扣减失败: 未找到 product=%1 slot=%2")
                         .arg(productId, slotId));
+}
+
+void RobotController::BeginFailureRecovery(const QString& failure_message)
+{
+    m_recovering_from_failure = true;
+    m_recovery_failure_message = failure_message;
+
+    RobotMission recoveryMission;
+    recoveryMission.m_order_id = m_mission.m_order_id;
+    recoveryMission.m_is_finished = false;
+    recoveryMission.m_is_end = false;
+    AppendHomeBeat(recoveryMission);
+
+    m_mission = recoveryMission;
+    m_curr_step = 0;
+    emit LogMessage("任务失败，开始回home恢复: " + failure_message);
+    SetState("故障恢复回home");
 }
 
 void RobotController::SetState(const QString& state)
